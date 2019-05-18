@@ -1,0 +1,24 @@
+/*将所有元素，默认内外边距取消*/
+* {
+    padding: 0;
+    margin: 0
+}
+/* 给a标签去掉下划线，给定默认颜色 */
+a {
+    text-decoration: none;
+    color: #fff
+}
+/* 对当前表格进行样式设定 */
+td {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: #111;
+    color: #fff;
+    white-space: nowrap;/*white-space 属性设置如何处理元素内的空白。 规定段落中的文本不进行换行：*/
+}
+
+body {
+    font-size: 12px;
+    font-family: "微软雅黑";
+    padding: 20px;
+}

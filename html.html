@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .red {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            border-radius: 100px;
+            left: 550px;
+            top: 300px;
+            /* transition:left 1s,top 1s; */
+        }
+
+        .blue {
+            top: 100px;
+            left: 600px;
+            width: 500px;
+            height: 500px;
+            /* background-color: blue; */
+            border-radius: 500px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+        }
+
+        .blue,
+        .red {
+            position: absolute;
+            
+        }
+
+        body {
+            display: flex;
+            /* justify-content: center; */
+            /* align-items: center; */
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="red"></div>
+    <div class="blue"></div>
+    <div>
+        <div></div>
+    </div>
+    <div><div>
+            <div>1</div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            // console.log(a)
+            // console.log(b)
+            setInterval(() => {
+            run()                
+            }, 100);
+            // (function (){
+            //     var aa = b = 'asd'
+            // }())
+            // console.log(aa)  
+            // console.log(b)
+            function test() {
+                var arr = []
+                for (var i = 0; i < 10; i++) {
+                    (function (j) {
+                        arr[j] = function(){
+                            // console.log(j)
+                        }
+                    }(i))
+                }
+                // console.log(i)
+
+                return arr
+            }
+            // 在执行test()的时候i = 10变量已经保存到了test函数内
+            var b = test()
+            // console.log('====================================')
+            for (var j = 0; j < 10; j++) {
+                b[j]()
+                // console.log('------------------------------------')
+            }
+            // console.log(test())
+
+            
+        }
+        var div1 = document.getElementsByClassName('red')[0]
+        var div2 = document.getElementsByClassName('blue')[0]
+        
+
+        var r = 250
+        var a = div2.offsetTop + r-50
+        var b = div2.offsetLeft +r-50
+        // console.log(div2.offsetTop)
+        // console.log(div2.offsetLeft)
+        var deg = 270
+        function run() {
+            if (deg === 360) {
+                deg = 0
+            }
+            // var newDeg = deg * Math.PI / 180      // 弧度 = 角度 * Math.PI / 180;    角度 = 弧度 * 180 / Math.PI
+            deg++
+            var x =b - r*Math.sin(deg * Math.PI / 180)  //有正负    + : 从左开始  - ： 从右开始
+            // console.log(x)
+            var y =a - r*Math.cos(deg* Math.PI / 180)  //有正负     + : 先下后上   - ：先上后下 
+            // var x = b
+            // var y = a
+            // console.log(x)
+            // console.log(y)
+            div1.style.position = 'absolute'
+            div1.style.left = x + 'px'
+            div1.style.top = y + 'px'
+            // div1.style.transform = "rotate(90deg)";
+        }
+
+
+
+
+
+
+
+        function change(a1, a2, a3) {
+            return this.name + ':总分' + (a1 + a2 +a3)
+        }
+        var ming = {name: 'ming'}
+        var hua = {name: 'hua'}
+        // apply 和 call 的 共同点在于都是临时替换this的对象
+        // 区别在于 
+        // apply只传2个参数，1个是obj,1个是数组， 
+        // call需要传入多个值，第一个为obj, 后面的都是需要的参数
+        console.log(change.call(ming, 90, 80, 90))
+        console.log(change.apply(hua,[ 10, 20, 30]))
+
+        // 这里的bind :基于原函数创建一个新函数，并且永久绑定this为指定对象
+        // 这里的lei_fun的函数已经将ming和90的值已经绑定了（固定不变）， 所以之后的调用只需要传入其他的值
+        var lei_fun = change.bind(ming, 90)
+        console.log(lei_fun(90, 90))
+        console.log(change.call(ming, 90,90,0))
+    </script>
+    <script src="./js.js"></script>
+</body>
+
+</html>
