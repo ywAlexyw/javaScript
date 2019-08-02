@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+        .contain{
+            position: absolute;
+            top:50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background-color:#fff
+        }
+        .ct_ul {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-content: space-between;
+            width: 480px;
+            height: 480px;
+        }
+        .ct_li {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #000;
+            background-color: #999;
+            text-align: center;
+            line-height: 150px;
+            font-size: 50px;
+            color: #000;
+            list-style: none;
+            box-sizing: border-box;
+        }
+        .active {
+            color: #eb032e;
+            background-color: orange;
+        }
+        .btn {
+            background-color: green;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="contain">
+        <ul class="ct_ul">
+            <li class="ct_li active" value="1">1</li>
+            <li class="ct_li"  value="2">2</li>
+            <li class="ct_li"  value="3">3</li>
+            <li class="ct_li"  value="8">8</li>
+            <li class="ct_li btn" value="点击">开始</li>
+            <li class="ct_li"  value="4">4</li>
+            <li class="ct_li"  value="7">7</li>
+            <li class="ct_li"  value="6">6</li>
+            <li class="ct_li"  value="5">5</li>
+        </ul>
+    </div>
+    <script>
+        window.onload = function () {
+            var t = 200;  // 定时器周期时间
+            var btn = document.getElementsByClassName('btn')[0]
+            var num  //vlaue值
+            var index = 0  //匀速执行的次数(一次一格)
+            var range  //中间匀速的随机数
+            btn.onclick = function () {
+                set1= setInterval(newMethod, t)
+                range  = Math.floor(40 + Math.random() * (55-40)) 
+                index = 0
+            }
+
+            //获得几等奖
+            function win() {
+                let winner = document.getElementsByClassName('active')[0]
+                var num
+                switch(winner.value) {
+                    case 1:
+                        num = '获得一等奖'
+                        break
+                    case 2:
+                        num = '获得二等奖'
+                        break
+                    case 3:
+                        num = '获得三等奖'
+                        break
+                    case 4:
+                        num = '获得四等奖'
+                        break
+                    case 5:
+                        num = '获得五等奖'
+                        break
+                    case 6:
+                        num = '获得六等奖'
+                        break
+                    case 7:
+                        num = '获得七等奖'
+                        break
+                    case 8:
+                        num = '获得八等奖'
+                        break
+                }
+                console.log(num)
+            }
+
+            //减速
+            function slow () {
+                t += 10
+                change()
+                if(typeof set3 !== 'undefined') {
+                    clearInterval(set3)
+                }
+                if (t < 200) {
+                    set3 = setInterval(slow, t)
+                } else {
+                    win()
+                }
+            } 
+
+            //匀速
+            function uniform () {
+                index++
+                change()
+                if (typeof set2 !== 'undefined') {
+                    clearInterval(set2)
+                }
+                if(index < range){ // 7 8 1 2 3 4 5 6
+                    set2 = setInterval(uniform,50)
+                } else {
+                    set3 = setInterval(slow,50)
+                }
+            }
+
+            // 加速
+            function accelerate() {
+                t-=10
+                change()
+                clearInterval(set1)
+                if(t>50){
+                    set1 = setInterval(accelerate,t)
+                }
+                if(t == 50) {
+                    //执行匀速代码
+                    set2 = setInterval(uniform,50)
+                }
+            }
+
+            // 动画
+            function change() {
+                var active = document.getElementsByClassName('active')[0]
+                active.classList.remove('active')
+                num = active.value
+                num++
+                if (num === 9) {
+                    num = 1
+                }
+                init()
+            }
+            
+            // 遍历li的数组
+            var li = document.getElementsByClassName('ct_li')
+           function init() {
+            //    console.log('----------------------------------')
+                for (let i = 0; i < li.length; i++) {
+                    if (li[i].value === num){
+                        li[i].classList.add('active')
+                        
+                    }
+                }
+                
+            }
+            
+
+            // newMethod()
+            // 方法二
+            function newMethod() {
+                // 动画切换
+                change()
+                // 删除定时器
+                if (typeof set1 !== 'undefined') {
+                    clearInterval(set1)
+                } 
+                if (typeof set2 !== 'undefined'){
+                    clearInterval(set2)
+                } 
+                if (typeof set3 !== 'undefined') {
+                    clearInterval(set3)
+                }
+                // 定时器的时间周期变化
+                if(t>50 && index === 0){
+                    // 加速
+                    t-=10
+                    set1 = setInterval(newMethod,t)
+                } else if(t == 50 && index === 0 || index < range ) {
+                    //执行匀速代码
+                    set2 = setInterval(newMethod,50)
+                    index++
+                } else if (t < 200) {
+                    // 减速
+                    t+=10
+                    set3 = setInterval(newMethod,t)
+                } else {
+                    // 获奖
+                    win()
+                }
+            }
+
+     }
+     
+    // var  set1 = setInterval(fn, t);
+    // function fn() {
+    //     var active = document.getElementsByClassName('active')[0]
+    //                 active.classList.remove('active')
+    //                 num = active.value
+    //                 num++
+    //                 if (num === 9) {
+    //                         num = 1
+    //                         // clearTimeout(timer)
+    //                     }
+    //                 init()
+    //     console.log('我是用来测试打印速度的');
+    //     t -= 10;
+    //     clearInterval(set1);
+    //     if (t > 0) {
+    //         set1 = setInterval(fn, t);
+    //     }
+    // }
+    </script>
+</body>
+</html>
