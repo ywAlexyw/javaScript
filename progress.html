@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .myProgress{
+            display: flex;
+            width: 100%;
+            height: 30px;
+            align-items: center;
+        }
+        .box{
+            width: 100%;
+            height: 100%;
+           
+        }
+        .outsideBox{
+            display: flex;
+        }
+        .progress{
+            display: flex;
+            width: 96%;
+            height: 100%;
+            
+            border-radius: 15px;
+            background-color: red;
+        }
+        .txt{
+            text-align: center;
+            width: 4%;
+            line-height: 30px;
+        }
+        .inside-txt{
+            width: 100%;
+            line-height: 30px;
+            margin-right: 2%;
+            color: #fff;
+            text-align: right;
+        }
+        .insideProgress{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="box">
+        <div class="progress">
+            <div class="inside-txt">50%</div>
+        </div>
+        <div class="txt">50%</div>
+    </div> -->
+    <my-progress 
+        percentage="70"
+        status="success"
+        stroke-width="20"
+        text-inside='true'
+        >
+    </my-progress>
+    <my-progress 
+        percentage="50"
+        status="success"
+        stroke-width="20"
+        >
+    </my-progress>
+    <script>
+        var myProgress = {
+            name: 'my-progress',
+            el: null,
+            props:{
+                percentage: {
+                    type: Number,
+                    default: 0,
+                    validator: function (val){ //校验
+                    console.log(val)
+                        return val >= 0 && val < 100
+                    }
+                },
+                status: {
+                    type: String,
+                    default: 'default',
+                    validator: function (str){ //校验
+                        return ['default', 'success','warning','excetion'].includes(str)
+                    }
+                },
+                'stroke-width': {
+                    type: Number,
+                    default: 6,
+                },
+                'text-inside': {
+                    type: Boolean,
+                    default: false
+                },
+            },
+            init:function(el) {
+                this.initData(el) // 默认对象
+                this.getAttrVal()   // 获取组件上的属性
+                this.render()   // 创建HTML组件（my-progress）
+            },
+            initData: function(el) {
+                this.el = el
+            },
+            getAttrVal: function() {
+                //对组件上的属性进行校验
+                var props = Object.keys(this.props)
+                console.log(props)
+                for (let i = 0; i < props.length; i++) {
+                    console.log(props[i])
+                    var attrKey = props[i]
+                    var attrVal = this.el.getAttribute(attrKey)
+                    var prop = this.validate(attrKey,attrVal)
+                    console.log(attrKey,prop)
+                    // 将组件上的属性值 添加到myProgress对象外面
+                    this[attrKey] = prop
+                }
+            },
+            validate(attrKey,attrVal) {
+                var propRule = this.props[attrKey]
+                var prop = null
+                // console.log('attrVal',propRule,attrVal)
+                if (!attrVal && 'default' in propRule) {
+                    // 是否含有值， 但没有值时 是否含有‘default’属性
+                    return propRule.default
+                }
+                if (propRule.type === Number) {
+                    prop = Number(attrVal)
+                } else if(propRule.type === String) {
+                    prop = attrVal
+                } else if(propRule.type === Boolean) {
+                    console.log('!!attrVal',!!attrVal)
+                    // !!attrVal  因为一开始传过来是string=>false  !false => true
+                    prop = !!attrVal
+                }
+                // console.log()
+
+                if(propRule.validator) {
+                    console.log('123---',prop)
+                    var flag = propRule.validator(prop)
+                    if(!flag) {
+                        console.error(`${this.name}组件的属性${attrKey}未校验成功`)
+                    }
+                }
+
+                return prop
+            },
+            render: function() {
+                console.log('---------------------',this['text-inside'],this)
+                this.el.outerHTML = `
+                    <div class="myProgress">
+                        ${this['text-inside'] ?
+                         `<div class="box outsideBox">
+                            <div class="progress"></div>
+                            <div class="txt">${this.percentage}%</div>
+                        </div>` : 
+                        `<div class="box">
+                            <div class="progress insideProgress">
+                                <div class="inside-txt">${this.percentage}%</div>
+                            </div>
+                        </div>`
+                        }
+                    </div>
+                `
+            }
+        }
+        var tagMyProgress = document.getElementsByTagName('my-progress')
+        for (let i = tagMyProgress.length -1; i >= 0; i--) {
+            console.log(tagMyProgress[i])
+            myProgress.init(tagMyProgress[i])
+        }
+    </script>
+</body>
+</html>
